@@ -1,4 +1,5 @@
-HuVis is supported by [KTI](https://www.kti.admin.ch/)
+
+ financial supported from the Kommission für Technologie und Innovation ([KTI](https://www.kti.admin.ch/))
 &mdash;
 This site is [open source]({{ site.source_link }})
 &mdash;
