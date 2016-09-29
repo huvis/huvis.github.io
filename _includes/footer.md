@@ -1,8 +1,10 @@
 
 
-Design by Tim O'Brien [t413.com](http://t413.com/)
+HuVis is supported by [KTI](https://www.kti.admin.ch/)  
 &mdash;
-[SinglePaged theme](https://github.com/t413/SinglePaged)
+This site is [open source]({{ site.source_link }})
 &mdash;
-this site is [open source]({{ site.source_link }})
+Design by Tim O'Brien
+&mdash;
+
 
