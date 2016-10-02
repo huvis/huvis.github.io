@@ -1,7 +1,7 @@
 
 This repository contains the source code of the HUVis project website [huvis.github.io](https://huvis.github.io). These source files are designed to be built using Jekyll and are automatically imported via Github Pages to generate the formatted site.
 
-Special thanks to [t413.com/SinglePaged](t413.com/SinglePaged) for a cool template.
+Special thanks to [t413.com/SinglePaged](//t413.com/SinglePaged) for a cool template.
 
 
 HUVis Project Page
