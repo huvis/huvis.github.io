@@ -1,5 +1,5 @@
 ---
-title: "<br>Publikationen"
+title: "publications"
 bg: purple
 color: white
 fa-icon: book
