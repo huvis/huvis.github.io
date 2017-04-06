@@ -1,9 +1,10 @@
 # *HUVis* Documentation
 ## **H**ybrid **U**rban **V**iszualization
 
-- [DemoFlightHUVis.mp4](DemoFlightHUVis.mp4)
-	HUVis-Architecture.png 	
-	Huvis_Framework_Tutorial.pdf
+- [Huvis_Framework_Tutorial.pdf](Huvis_Framework_Tutorial.pdf)
+- [DemoFlightHUVis.mp4](DemoFlightHUVis.mp4) *HUVis* usecase, showing 3 possible architecture models.
+- [HUVis-Architecture.png](HUVis-Architecture.png) *HUVis* Software Architecture	
+	
 
 
 
