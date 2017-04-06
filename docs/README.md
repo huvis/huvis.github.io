@@ -1,9 +1,16 @@
 # *HUVis* Documentation
-
 ## **H**ybrid **U**rban **V**iszualization
 
-## Used technologies
+- [DemoFlightHUVis.mp4](DemoFlightHUVis.mp4)
+	HUVis-Architecture.png 	
+	Huvis_Framework_Tutorial.pdf
 
+
+
+
+## Used Hardware
+
+- Oculus Rift - Virtual Reality Headset
 - OSVR HDK 2 (3D-glases)
 - unity (3D rendering, physics engine)
 - leap motion controller (gesture control, user interface)
