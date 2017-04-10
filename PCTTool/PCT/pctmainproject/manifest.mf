@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: com.vanamco.huvis.modules.pctmainproject
+OpenIDE-Module-Install: com/vanamco/huvis/modules/pctmainproject/PCTModuleInstall.class
+OpenIDE-Module-Localizing-Bundle: com/vanamco/huvis/modules/pctmainproject/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Layer: com/vanamco/huvis/modules/pctmainproject/meta/layer.xml
+

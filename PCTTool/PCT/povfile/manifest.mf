@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: com.vanamco.huvis.modules.povfile
+OpenIDE-Module-Localizing-Bundle: com/vanamco/huvis/modules/povfile/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

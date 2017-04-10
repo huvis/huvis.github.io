@@ -1,0 +1,155 @@
+
+<project default="bundle">
+
+	<property name="imagedir" value="${basedir}" />
+	<property name="outputdir" value="${basedir}/output" />
+
+	<property name="bundlerbin" value="${basedir}/bundlerbin" />
+	<property name="mogrify" value="/usr/local/bin/mogrify" />
+
+
+	<property name="sift" value="${bundlerbin}/sift" />
+	<property name="keymatch" value="${bundlerbin}/KeyMatchFull" />
+	<property name="extractFocal" value="${bundlerbin}/extract_focal.pl" />
+	<property name="bundler" value="${bundlerbin}/bundler" />
+
+	<taskdef resource="cpptasks.tasks">
+	  <classpath>
+	    <pathelement location="${bundlerbin}/cpptasks.jar"/>
+	  </classpath>
+	</taskdef>
+
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+	  <classpath>
+	    <pathelement location="${bundlerbin}/ant-contrib.jar"/>
+	  </classpath>
+	</taskdef>
+
+	<target name="makeoutput"> <mkdir dir="${outputdir}"/> </target>
+
+	<!-- need to have this go out of date on a change to threshold parameter -->
+
+	<target name="sift">
+		<foreach target="imageToSift" param="imageToSift.input" parallel="true" maxThreads="8">
+			<path>
+				<fileset dir="${imagedir}">
+					<include name="*.jpg" />
+				</fileset>
+			</path>
+		</foreach>
+	</target>
+
+	<target name="imageToSift">
+		<outofdate verbose="true" outputtargets="imageToSift.target">
+			<sourcefiles>
+				<fileset file="${imageToSift.input}" />
+			</sourcefiles>
+			<mapper>
+				<chainedmapper>
+					<flattenmapper />
+					<globmapper from="*.jpg" to="${outputdir}/*.key.gz" />
+				</chainedmapper>
+			</mapper>
+			<sequential>
+				<shellscript shell="bash">
+					
+					echo "converting jpg to pgm"
+					java -Djava.awt.headless=true -Xmx1500m -cp ${bundlerbin}/imageUtils.jar marc.graphics.reconstruction.T_SavePGM ${imageToSift.input} `echo ${imageToSift.input} | sed 's/jpg/pgm/'`
+
+					echo "performing sift"
+					${sift} --octaves=7 --verbose `echo ${imageToSift.input} | sed 's/jpg/pgm/'`
+					rm `echo ${imageToSift.input} | sed 's/jpg/pgm/'`
+
+					echo "launching sift munger"
+					java -Djava.awt.headless=true -cp ${bundlerbin}/imageUtils.jar marc.graphics.reconstruction.T_MungeSiftFormat `echo ${imageToSift.input} | sed 's/jpg/key/'`
+
+					echo "compressing key file"
+					gzip -f `echo ${imageToSift.input} | sed 's/jpg/key/'`
+
+					mv `echo ${imageToSift.input} | sed 's/jpg/key.gz/'` ${imageToSift.target}
+					
+				</shellscript>
+			</sequential>
+		</outofdate>
+	</target>
+
+
+	<target name="check.keyMatch">
+		<uptodate property="KeyMatchNotNeeded" targetfile="${outputdir}/matches.init.txt">
+			<srcfiles dir="${outputdir}" includes="*.key.gz" />
+		</uptodate>
+	</target>
+
+	<target name="keyMatch" depends="makeoutput,sift,check.keyMatch" unless="KeyMatchNotNeeded">
+		<shellscript shell="bash">
+				ls ${outputdir}/*.key.gz > ${outputdir}/list_keys1.txt
+				sed 's/.key.gz/.key/' ${outputdir}/list_keys1.txt > ${outputdir}/list_keys2.txt
+				${keymatch} ${outputdir}/list_keys2.txt ${outputdir}/matches.init.txt
+			</shellscript>
+	</target>
+
+	<target name="check.focalLength">
+		<uptodate property="FocalLengthNotNeeded" targetfile="${outputdir}/list_focal.txt">
+			<srcfiles dir="${imagedir}" includes="*.jpg" />
+		</uptodate>
+	</target>
+
+	<target name="focalLength" depends="keyMatch,check.focalLength" unless="FocalLengthNotNeeded">
+		<shellscript shell="bash">
+				ls ${imagedir}/*.jpg > ${outputdir}/list_jpgs.txt
+				${extractFocal} ${outputdir}/list_jpgs.txt ${outputdir}
+		</shellscript>
+	</target>
+
+	<target name="check.bundler">
+		<uptodate property="BundlerNotNeeded" targetfile="${outputdir}/bundle.out">
+			<srcfiles file="${outputdir}/matches.init.txt" />
+			<srcfiles file="${outputdir}/list_focal.txt" />
+		</uptodate>
+	</target>
+
+	<target name="bundle" depends="makeoutput,focalLength,keyMatch,check.bundler" unless="BundlerNotNeeded">
+		<shellscript shell="bash">
+			${bundler} ${outputdir}/list_focal.txt --image_dir ${imagedir} --key_dir ${outputdir} --match_table ${outputdir}/matches.init.txt --output bundle.out --output_all bundle_ --output_dir ${outputdir} --variable_focal_length --use_focal_estimate --constrain_focal --constrain_focal_weight 0.0001 --estimate_distortion --run_bundle
+		</shellscript>
+	</target>
+
+	<!-- need to have this go out of date on a change to focal length parameter -->
+	<!-- watch for ref to jhead and BASE_DIR in scripts -->
+	<!-- need to include default focal length -->
+
+	<target name="cleanSift">
+		<delete>
+			<fileset dir="${outputdir}" includes="*.key.gz" />
+			<fileset dir="${outputdir}" includes="*.key" />
+			<fileset dir="${outputdir}" includes="*.pgm" />
+			<fileset dir="${outputdir}" includes="*.txt" />
+		</delete>
+	</target>
+
+	<target name="cleanKeyMatch">
+		<delete>
+			<fileset file="${outputdir}/matches.init.txt" />
+		</delete>
+	</target>
+
+	<target name="cleanBundle">
+		<delete>
+			<fileset file="${outputdir}/list_jpgs.txt" />
+			<fileset file="${outputdir}/list_focal.txt" />
+			<fileset file="constraints.txt" />
+			<fileset file="nmatches*.txt" />
+			<fileset file="matches*.txt" />
+			<fileset file="pairwise_scores.txt" />
+			<fileset file="${outputdir}list_keys1.txt" />
+			<fileset file="${outputdir}list_keys2.txt" />
+			<fileset file="${outputdir}/bundle*.out" />
+			<fileset file="${outputdir}/*ply" />
+		</delete>
+	</target>
+
+	<target name="clean" depends="cleanSift, cleanBundle" />
+
+
+</project>
+

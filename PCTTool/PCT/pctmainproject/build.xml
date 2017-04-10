@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See harness/README in the NetBeans platform -->
+<!-- for some information on what you could do (e.g. targets to override). -->
+<!-- If you delete this file and reopen the project it will be recreated. -->
+<project name="com.vanamco.huvis.modules.pctmainproject" default="netbeans" basedir=".">
+    <description>Builds, tests, and runs the project com.vanamco.huvis.modules.pctmainproject.</description>
+    <import file="nbproject/build-impl.xml"/>
+    
+        
+    <target name="netbeans" depends="icons,package-samples,projectized-common.netbeans"/>
+    
+    <target name="icons">
+        <delete file="${basedir}/src/com/vanamco/huvis/modules/pctmainproject/templates/EmptyPCTProject.png"/>
+        <delete file="${basedir}/src/com/vanamco/huvis/modules/pctmainproject/templates/SamplePCTProject.png"/>
+        <copy file="${basedir}/src/com/vanamco/huvis/modules/pctmainproject/resources/pct_project.png" tofile="${basedir}/src/com/vanamco/huvis/modules/pctmainproject/templates/EmptyPCTProject.png"/> 
+        <copy file="${basedir}/src/com/vanamco/huvis/modules/pctmainproject/resources/pct_project.png" tofile="${basedir}/src/com/vanamco/huvis/modules/pctmainproject/templates/SamplePCTProject.png"/> 
+    </target>
+
+    <target name="package-samples">
+
+        <delete file="${basedir}/src/com/vanamco/huvis/modules/pctmainproject/templates/EmptyPCTProjectProject.zip"/>
+
+        <delete file="${basedir}/src/com/vanamco/huvis/modules/pctmainproject/templates/SamplePCTProjectProject.zip"/>
+
+        <zip compress="9" basedir="src/com/vanamco/huvis/modules/pctmainproject/templates/EmptyPCTProject"
+         zipfile="${basedir}/src/com/vanamco/huvis/modules/pctmainproject/templates/EmptyPCTProjectProject.zip"/>
+
+        <zip compress="9" basedir="src/com/vanamco/huvis/modules/pctmainproject/templates/SamplePCTProject"
+         zipfile="${basedir}/src/com/vanamco/huvis/modules/pctmainproject/templates/SamplePCTProjectProject.zip"/>
+
+    </target>
+    
+    
+</project>
